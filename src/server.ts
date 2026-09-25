@@ -10,10 +10,10 @@ initSchema();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
-
-// Vercel sets VERCEL=1. On Vercel, static files come from /public via the CDN —
-// express.static is ignored there — so we only mount local static serving off-Vercel.
 const isVercel = Boolean(process.env.VERCEL);
+
+// process.cwd() is reliable on Vercel; __dirname can point inside the bundle.
+const publicDir = path.join(process.cwd(), "public");
 
 app.use(express.json());
 
@@ -21,14 +21,15 @@ app.use(express.json());
 app.use(tokenRoutes);
 app.use(auditRoutes);
 
-if (!isVercel) {
-  // Local/dev: serve the vanilla UI from the same Express process.
-  app.use(express.static(path.join(__dirname, "..", "public")));
+// Always serve the UI from Express.
+// On Vercel, framework mode routes "/" to this function (CDN public/ alone
+// does not satisfy GET /), so we must handle static files here. vercel.json
+// includeFiles ensures /public is present in the serverless bundle.
+app.use(express.static(publicDir));
 
-  app.get("/", (_req, res) => {
-    res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-  });
-}
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
 
 // Only bind a port when running as a long-lived process (local / npm start).
 // On Vercel the platform invokes this module as a serverless function.
