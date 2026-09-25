@@ -11,23 +11,36 @@ initSchema();
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
+// Vercel sets VERCEL=1. On Vercel, static files come from /public via the CDN —
+// express.static is ignored there — so we only mount local static serving off-Vercel.
+const isVercel = Boolean(process.env.VERCEL);
+
 app.use(express.json());
 
 // API routes
 app.use(tokenRoutes);
 app.use(auditRoutes);
 
-// Static frontend (vanilla HTML/CSS/JS) — same origin, no CORS fuss for the demo.
-app.use(express.static(path.join(__dirname, "..", "public")));
+if (!isVercel) {
+  // Local/dev: serve the vanilla UI from the same Express process.
+  app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-});
+  app.get("/", (_req, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`Leash listening on http://localhost:${PORT}`);
-  console.log(`  POST /request-token  — issue a scoped token`);
-  console.log(`  POST /execute        — use a token (single-use)`);
-  console.log(`  POST /revoke         — kill a live token`);
-  console.log(`  GET  /audit-log      — decision trail`);
-});
+// Only bind a port when running as a long-lived process (local / npm start).
+// On Vercel the platform invokes this module as a serverless function.
+if (!isVercel) {
+  app.listen(PORT, () => {
+    console.log(`Leash listening on http://localhost:${PORT}`);
+    console.log(`  POST /request-token  — issue a scoped token`);
+    console.log(`  POST /execute        — use a token (single-use)`);
+    console.log(`  POST /revoke         — kill a live token`);
+    console.log(`  GET  /audit-log      — decision trail`);
+  });
+}
+
+// Default export is what Vercel's Express detector picks up (src/server.ts).
+export default app;

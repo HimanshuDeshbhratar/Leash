@@ -1,13 +1,26 @@
 import { DatabaseSync } from "node:sqlite";
 import path from "path";
+import os from "os";
 
 /**
  * SQLite via Node's built-in `node:sqlite` (DatabaseSync).
  * Same idea as better-sqlite3 — synchronous, file-backed, zero external DB —
  * without a native addon that needs Visual Studio build tools on Windows.
- * For a portfolio demo, "npm install && npm run dev" must just work.
+ *
+ * Path selection:
+ * - Locally: ./leash.db in the project root (persists across restarts).
+ * - On Vercel: /tmp/leash.db — the only writable dir in a serverless function.
+ *   Storage is *ephemeral* (lost on cold starts / new instances). Fine for a
+ *   demo of the token pattern; not fine for production multi-instance state.
  */
-const dbPath = path.join(process.cwd(), "leash.db");
+function resolveDbPath(): string {
+  if (process.env.VERCEL) {
+    return path.join(os.tmpdir(), "leash.db");
+  }
+  return path.join(process.cwd(), "leash.db");
+}
+
+const dbPath = resolveDbPath();
 export const db = new DatabaseSync(dbPath);
 
 // WAL improves concurrent read performance while we poll /audit-log from the UI.

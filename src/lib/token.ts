@@ -32,10 +32,18 @@ const DEFAULT_TTL_SECONDS = 300; // 5 minutes — short enough that a leaked tok
 
 function getSecret(): string {
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error("JWT_SECRET is not set. Copy .env.example to .env.");
+  if (secret) return secret;
+
+  // Allow a first Vercel deploy without env config; still require an explicit
+  // secret for local runs so people don't accidentally ship without .env.
+  if (process.env.VERCEL) {
+    console.warn(
+      "[leash] JWT_SECRET is not set — using an insecure demo secret. Set JWT_SECRET in the Vercel project env."
+    );
+    return "leash-vercel-demo-secret-change-me";
   }
-  return secret;
+
+  throw new Error("JWT_SECRET is not set. Copy .env.example to .env.");
 }
 
 /**

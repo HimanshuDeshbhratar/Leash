@@ -8,6 +8,9 @@
     "build": "tsc",
     "start": "node dist/server.js"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "keywords": ["credential-broker", "jwt", "agent-auth", "scoped-tokens"],
   "license": "MIT",
   "dependencies": {
