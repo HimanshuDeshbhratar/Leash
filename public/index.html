@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leash — scoped credential broker</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="brand-mark">◈</span>
+      <h1>LEASH</h1>
+    </div>
+    <p class="tagline">scoped · ephemeral · revocable · audited</p>
+    <p class="subtitle">
+      Credential broker for AI agent tool calls. Agents never hold raw API keys —
+      they request a short-lived token for one action, use it once, and every
+      decision is logged.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel" id="issue-panel">
+      <h2>01 · request token</h2>
+      <form id="issue-form">
+        <label>
+          principal
+          <input type="text" name="principal" value="alice" required autocomplete="off" />
+        </label>
+        <label>
+          scope
+          <input
+            type="text"
+            name="scope"
+            value="github:comment:issue"
+            list="scope-suggestions"
+            required
+            autocomplete="off"
+          />
+          <datalist id="scope-suggestions">
+            <option value="github:comment:issue"></option>
+            <option value="github:create:pr"></option>
+            <option value="slack:send:message"></option>
+            <option value="slack:read:channel"></option>
+          </datalist>
+        </label>
+        <label>
+          ttl
+          <select name="ttl_seconds">
+            <option value="60">60s</option>
+            <option value="300" selected>5 min</option>
+            <option value="900">15 min</option>
+            <option value="1800">30 min</option>
+          </select>
+        </label>
+        <button type="submit">issue</button>
+      </form>
+      <div id="issue-result" class="result hidden">
+        <div class="result-row">
+          <span class="label">token_id</span>
+          <code id="issued-token-id"></code>
+        </div>
+        <div class="result-row">
+          <span class="label">expires</span>
+          <code id="issued-expires"></code>
+        </div>
+        <div class="result-row token-row">
+          <span class="label">jwt</span>
+          <code id="issued-token" class="truncated"></code>
+          <button type="button" id="copy-token" class="ghost">copy</button>
+        </div>
+      </div>
+      <pre id="issue-error" class="error hidden"></pre>
+    </section>
+
+    <section class="panel" id="execute-panel">
+      <h2>02 · execute</h2>
+      <form id="execute-form">
+        <label>
+          token
+          <textarea name="token" rows="3" placeholder="paste JWT here" required></textarea>
+        </label>
+        <label>
+          action
+          <input
+            type="text"
+            name="action"
+            value="github:comment:issue"
+            required
+            autocomplete="off"
+          />
+        </label>
+        <button type="submit">execute</button>
+      </form>
+      <pre id="execute-result" class="result hidden"></pre>
+      <pre id="execute-error" class="error hidden"></pre>
+    </section>
+
+    <section class="panel" id="revoke-panel">
+      <h2>03 · revoke</h2>
+      <form id="revoke-form">
+        <label>
+          token_id
+          <input type="text" name="token_id" placeholder="uuid from issue response" required autocomplete="off" />
+        </label>
+        <label>
+          principal
+          <input type="text" name="principal" value="alice" required autocomplete="off" />
+        </label>
+        <button type="submit" class="danger">revoke</button>
+      </form>
+      <pre id="revoke-result" class="result hidden"></pre>
+      <pre id="revoke-error" class="error hidden"></pre>
+    </section>
+
+    <section class="panel audit-panel">
+      <div class="audit-header">
+        <h2>04 · audit log</h2>
+        <span id="audit-meta" class="meta">polling every 2s</span>
+      </div>
+      <div class="table-wrap">
+        <table id="audit-table">
+          <thead>
+            <tr>
+              <th>time</th>
+              <th>action</th>
+              <th>decision</th>
+              <th>reason</th>
+              <th>scope</th>
+              <th>principal</th>
+              <th>token_id</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body">
+            <tr class="empty"><td colspan="7">no entries yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>demo · not production auth</span>
+    <span>single-use · exact-scope · db-backed revoke</span>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

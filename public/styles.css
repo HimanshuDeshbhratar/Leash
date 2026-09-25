@@ -1,0 +1,339 @@
+:root {
+  --bg: #0c0e12;
+  --bg-panel: #12151c;
+  --bg-input: #0a0c10;
+  --border: #2a3140;
+  --border-focus: #5a7a9a;
+  --text: #c8d0dc;
+  --text-dim: #6a7384;
+  --text-bright: #e8ecf2;
+  --accent: #7eb8a0;
+  --accent-dim: #3d6b58;
+  --danger: #c07070;
+  --danger-bg: #2a1515;
+  --allow: #7eb8a0;
+  --deny: #c07070;
+  --highlight: #1a2a22;
+  --mono: "IBM Plex Mono", "Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, #152018 0%, transparent 55%),
+    linear-gradient(180deg, #0e1118 0%, var(--bg) 40%);
+  color: var(--text);
+  padding: 2rem 1.5rem 4rem;
+}
+
+header {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.brand-mark {
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  color: var(--text-bright);
+}
+
+.tagline {
+  margin-top: 0.4rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+}
+
+.subtitle {
+  margin-top: 1rem;
+  max-width: 58ch;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+}
+
+.panel h2 {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-panel {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+}
+
+.audit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0;
+}
+
+.audit-header h2 {
+  margin-bottom: 1rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.meta {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+input,
+textarea,
+select {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-bright);
+  padding: 0.5rem 0.6rem;
+  letter-spacing: normal;
+  text-transform: none;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+button {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--accent-dim);
+  color: var(--text-bright);
+  border: 1px solid var(--accent);
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  margin-top: 0.25rem;
+}
+
+button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+button.danger {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button.danger:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
+button.ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-dim);
+  padding: 0.25rem 0.5rem;
+  margin-top: 0;
+  font-size: 0.65rem;
+}
+
+button.ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: transparent;
+}
+
+.result {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--allow);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: start;
+  margin-bottom: 0.4rem;
+}
+
+.result-row .label {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 0.15rem;
+}
+
+.result-row code {
+  color: var(--text-bright);
+  font-size: 0.75rem;
+}
+
+.truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.hidden {
+  display: none;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #1a1e28;
+  vertical-align: top;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.decision-allowed {
+  color: var(--allow);
+}
+
+td.decision-denied {
+  color: var(--deny);
+}
+
+tr.flash {
+  animation: flash-in 1.2s ease-out;
+}
+
+@keyframes flash-in {
+  0% { background: var(--highlight); }
+  100% { background: transparent; }
+}
+
+tr.empty td {
+  color: var(--text-dim);
+  text-align: center;
+  padding: 1.5rem;
+}
+
+footer {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
